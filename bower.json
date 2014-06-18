@@ -1,0 +1,9 @@
+{
+  "name": "pointyHair",
+  "version": "0.0.0",
+  "dependencies": {
+    "angular": "~1.3",
+    "bootstrap": "~3.1.1",
+    "angular-ui-router": "~0.2.10"
+  }
+}

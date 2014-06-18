@@ -1,0 +1,11 @@
+<div class="row">
+  <div ui-view class="col-md-2">
+    <ul>
+      <li ng-repeat="p in people">
+      <a ui-sref="people.detail({personId:p.id})">{{p.name}}</a>
+      </li>
+    </ul> 
+  </div>
+  <div ui-view="detail" class="col-md-10">
+  </div>
+</div>
