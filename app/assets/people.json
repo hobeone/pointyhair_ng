@@ -2,7 +2,7 @@
   "people": [
     {
       "id": 1,
-      "name": "apw",
+      "name": "user1",
       "notes": [
         1,
         2,
@@ -14,7 +14,7 @@
     },
     {
       "id": 2,
-      "name": "dbp",
+      "name": "user3",
       "notes": [
         3,
         4,
