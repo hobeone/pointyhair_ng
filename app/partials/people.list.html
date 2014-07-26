@@ -1,0 +1,8 @@
+<div>
+  <div ng-repeat="p in people">
+    <a ui-sref="people.detail({personId:p.id})">
+      {{p.name}} - {{p.notes.length}} Notes, {{p.todos.length}} Todos
+      <span class="pointer glyphicon glyphicon-chevron-right"></span>
+    </a>
+  </div>
+</div>

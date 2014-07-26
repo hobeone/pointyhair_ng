@@ -1,0 +1,29 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2">
+      <div class="people list-group">
+        <button class="btn" ng-click="peopleCtrl.reloadPeople()">reload people</button>
+        <hr>
+        <li ng-repeat="p in peopleCtrl.people | orderBy:name" ui-sref-active="active">
+        <a ui-sref="people.detail({personId:p.id})">{{p.name}} - {{p.notes.length}}<span class="pointer glyphicon glyphicon-chevron-right"></span></a>
+        </li>
+        <hr>
+
+
+        <form name="todoForm" ng-submit="peopleCtrl.addPerson(person)"
+          <fieldset class="form-group">
+            <input type="text" ng-model="person.name" class="form-control"
+              placeholder="Person Name" title="Name" required>
+          </fieldset>
+          <fieldset class="form-group">
+            <input type="submit" class="btn btn-primary pull-right"
+            value="Add" />
+          </fieldset>
+
+        </form>
+      </div>
+    </div>
+    <div class="col-md-10" ui-view></div>
+  </div>
+</div>
+

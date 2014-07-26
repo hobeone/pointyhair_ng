@@ -3,18 +3,29 @@
 /* jasmine specs for controllers go here */
 
 describe('controllers', function(){
-  beforeEach(module('myApp.controllers'));
 
+  describe('PeopleListController', function() {
+    var scope, ctrl, $httpBackend;
 
-  it('should ....', inject(function($controller) {
-    //spec body
-    var myCtrl1 = $controller('MyCtrl1', { $scope: {} });
-    expect(myCtrl1).toBeDefined();
-  }));
+    beforeEach(module('myApp'));
+    beforeEach(inject(function(_$httpBackend_, $rootScope, $controller) {
+      $httpBackend = _$httpBackend_;
+      $httpBackend.expectGET('people.json').
+          respond([{name: 'Nexus S'}, {name: 'Motorola DROID'}]);
 
-  it('should ....', inject(function($controller) {
-    //spec body
-    var myCtrl2 = $controller('MyCtrl2', { $scope: {} });
-    expect(myCtrl2).toBeDefined();
-  }));
+      scope = $rootScope.$new();
+      ctrl = $controller('PeopleListController', {$scope: scope});
+    }));
+
+    it('should create "people" model with 2 people', function() {
+      expect(scope.people).toBeUndefined();
+      $httpBackend.flush();
+
+      //var ctrl = $controller('PeopleListController', { $scope:scope});
+      window.console.log(scope);
+      expect(scope.people).toBeDefined();
+      expect(scope.people.length).toBe(2);
+    });
+  });
+
 });

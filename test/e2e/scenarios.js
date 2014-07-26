@@ -6,37 +6,27 @@ describe('my app', function() {
 
   browser.get('index.html');
 
+  it('should filter the person list as user types into the search box', function() {
+    var peopleList = element.all(by.repeater('p in people'));
+    var query = element(by.model('person_query'));
+
+    expect(peopleList.count()).toBe(2);
+    query.sendKeys('apw');
+    expect(peopleList.count()).toBe(1);
+  });
+
   it('should automatically redirect to /view1 when location hash/fragment is empty', function() {
-    expect(browser.getLocationAbsUrl()).toMatch("/view1");
+    expect(browser.getLocationAbsUrl()).toMatch('/view1');
   });
 
-
-  describe('view1', function() {
-
-    beforeEach(function() {
-      browser.get('index.html#/view1');
+  it('should render people specific links', function() {
+    var query = element(by.model('person_query'));
+    query.sendKeys('apw');
+    element(by.css('.people a')).click();
+    browser.getLocationAbsUrl().then(function(url) {
+      expect(url.split('#')[1]).toBe('/people/1');
     });
-
-
-    it('should render view1 when user navigates to /view1', function() {
-      expect(element.all(by.css('[ng-view] p')).first().getText()).
-        toMatch(/partial for view 1/);
-    });
-
   });
 
-
-  describe('view2', function() {
-
-    beforeEach(function() {
-      browser.get('index.html#/view2');
-    });
-
-
-    it('should render view2 when user navigates to /view2', function() {
-      expect(element.all(by.css('[ng-view] p')).first().getText()).
-        toMatch(/partial for view 2/);
-    });
-
-  });
+ 
 });

@@ -1,0 +1,37 @@
+<div ng-controller="NoteController as noteCtrl">
+<h2>Notes:</h2>
+
+<button ng-click="noteCtrl.flipShowForm()">Add note</button>
+
+<form name="noteForm" ng-submit="noteCtrl.addNote(personCtrl.person)"
+  ng-show="noteCtrl.showForm">
+  <!--  Live Preview -->
+  <blockquote>
+    {{noteCtrl.note.text}}
+    <cite class="clearfix">—{{noteCtrl.note.date | date}}</cite>
+  </blockquote>
+
+  <fieldset class="form-group">
+    <textarea ng-model="noteCtrl.note.text" class="form-control"
+      placeholder="Note Text..."
+      title="Text" required>
+    </textarea>
+  </fieldset>
+  <fieldset class="form-group">
+    <input type="date" ng-model="noteCtrl.note.date"
+    value="{{noteCtrl.note.date}}" required/>
+  </fieldset>
+  <fieldset class="form-group">
+    <input type="submit" class="btn btn-primary pull-right" value="Submit Review" />
+  </fieldset>
+</form>
+
+<div ng-repeat="t in personCtrl.person.notes | orderBy:'-date'">
+  <blockquote>
+    {{t.text}}
+    <cite class="clearfix">—{{t.date | date}}</cite>
+    <span ng-click="noteCtrl.deleteNote(personCtrl.person, t)" class="glyphicon glyphicon-remove"></span>
+  </blockquote>
+</div>
+
+</div>
