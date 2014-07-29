@@ -4,7 +4,7 @@
 
   <form name="todoForm" ng-submit="todoCtrl.addTodo(personCtrl.person)" ng-show="todoCtrl.showForm">
     <fieldset class="form-group">
-      <textarea ng-model="todoCtrl.todo.subject" class="form-control" title="Subject" name="todotext" required></textarea>
+      <textarea ng-model="todoCtrl.todo.text" class="form-control" title="text" name="todotext" required></textarea>
     </fieldset>
     <fieldset class="form-group">
       <input type="date" id="dateInput" name="input" ng-model="todoCtrl.todo.date"/required>
@@ -19,7 +19,7 @@
   <div ng-repeat="t in personCtrl.person.todos | orderBy:'-date'">
     <blockquote>
       <form editable-form name="editableForm" onbeforesave="todoCtrl.updateTodo(personCtrl.person.id, t.id, $data)">
-        <pre e-class="form-control" ng-click="editableForm.$show()" editable-textarea="t.subject" e-name="subject" e-required e-rows="10" >{{ t.subject }}</pre>
+        <pre e-class="form-control" ng-click="editableForm.$show()" editable-textarea="t.text" e-name="text" e-required e-rows="10" >{{ t.text }}</pre>
         <cite class="clearfix">—<span editable-date="t.date" e-name="date" e-required>{{t.date | date}}</span></cite>
         <div class="buttons">
           <!-- buttons to submit / cancel form -->
