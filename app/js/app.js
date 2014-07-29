@@ -5,13 +5,19 @@
 var myapp = angular.module('myApp', [
   'ui.router',
   'restangular',
+  'xeditable',
   'myApp.filters',
   'myApp.services',
   'myApp.directives',
   'myApp.controllers'
-]).run(['$rootScope', '$state', '$stateParams', function ($rootScope,   $state,   $stateParams) {
+]).run(['$rootScope', '$state', '$stateParams', 'editableOptions', 'editableThemes', function ($rootScope,   $state,   $stateParams, editableOptions, editableThemes) {
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
+
+  editableThemes.bs3.inputClass = 'input-sm';
+  editableThemes.bs3.buttonsClass = 'btn-sm';
+
+    editableOptions.theme = 'bs3'; 
 }]);
 
 myapp.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
@@ -46,6 +52,11 @@ myapp.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
   .state('people.list', {
     url: '',
     templateUrl: 'partials/people.list.html'
+  })
+  .state('people.addtodoall', {
+    url: '/addtoall',
+    templateUrl: 'partials/people-addtodoall.html',
+    controller: 'TodoController as todoCtrl',
   })
   .state('people.detail', {
     url: '/{personId:[0-9]{1,4}}',
@@ -98,7 +109,15 @@ myapp.controller('TodoController', ['Restangular', '$window', function(Restangul
     self.showForm = !self.showForm;
   };
 
-  this.addTodoToAll = function(todo, peoplectrl) {
+  this.cancelTodoForm = function() {
+    self.showForm = false;
+    self.todo = {
+      date: new Date()
+    };
+    return false;
+  };
+
+  this.addTodoToAll = function(peoplectrl) {
     console.log('Adding todo to all persons');
     try {
       self.todo.date = new Date(self.todo.date).toISOString();
@@ -110,13 +129,29 @@ myapp.controller('TodoController', ['Restangular', '$window', function(Restangul
     var baseTodos = Restangular.all('todos');
     baseTodos.post(self.todo, {addToAll: true}).then(function() {
       console.log('Saved todo');
-      self.todo = {};
+      self.todo = {date: new Date()};
       self.submiterror = '';
       self.flipShowForm();
       peoplectrl.reloadPeople();
     }, function(data) {
       self.submiterror = 'There was an error saving'+data;
       console.log('There was an error saving'+data);
+    });
+  };
+
+  this.updateTodo = function(personid, todoid, d) {
+    d.id = todoid;
+    d.person = personid;
+    var baseTodos = Restangular.all('todos');
+    baseTodos.post(d).then(function(resp) {
+      console.log('Object saved OK');
+      console.log(resp);
+      return true;
+    }, function(resp) {
+      console.log('There was an error saving:');
+      console.log(resp);
+      window.alert('Error saving record: '+resp.data);
+      return false; 
     });
   };
 
@@ -134,7 +169,7 @@ myapp.controller('TodoController', ['Restangular', '$window', function(Restangul
     baseTodos.post(self.todo).then(function(resp) {
       console.log('Object saved OK');
       person.todos.push(resp);
-      self.todo = {};
+      self.todo = {date: new Date()};
       self.submiterror = '';
       self.flipShowForm();
     }, function(data) {
@@ -158,7 +193,6 @@ myapp.controller('TodoController', ['Restangular', '$window', function(Restangul
     }
   };
 
-
 }]);
 
 myapp.controller('NoteController', ['Restangular', '$window', function(Restangular, $window) {
@@ -166,10 +200,20 @@ myapp.controller('NoteController', ['Restangular', '$window', function(Restangul
   this.note = {
     date: new Date()
   };
-  this.showForm = false;
-  this.flipShowForm = function() {
-    self.showForm = !self.showForm;
+  this.hideForm = true;
+  this.showForm = function() {
+    self.hideForm = false;
   };
+
+  this.cancelForm = function() {
+    self.hideForm = true;
+    self.note = {
+      date: new Date()
+    };
+    return false;
+  };
+
+
   this.addNote = function(person) {
     self.note.person = person.id;
     console.log(self.note);
@@ -178,13 +222,31 @@ myapp.controller('NoteController', ['Restangular', '$window', function(Restangul
     baseNotes.post(self.note).then(function(resp) {
       console.log('Object saved OK');
       person.notes.push(resp);
-      self.note = {};
-      self.flipShowForm();
+      self.note = {
+        date: new Date(),
+      };
+      self.hideForm = true;
     }, function(resp) {
       console.log('There was an error saving:');
       console.log(resp);
     });
   };
+
+  this.updateNote = function(personid, noteid, note) {
+    note.person = personid;
+    note.id = noteid;
+    console.log(note);
+    self.note.date = new Date(note.date).toISOString();
+    var baseNotes = Restangular.all('notes');    
+    baseNotes.post(note).then(function(resp) {
+      console.log('Object saved OK');
+      console.log(resp);
+    }, function(resp) {
+      console.log('There was an error saving:');
+      console.log(resp);
+    });
+  };
+
   this.deleteNote = function(person, note) {
     var deleteUser = $window.confirm('Are you absolutely sure you want to delete?');   
     console.log(note);

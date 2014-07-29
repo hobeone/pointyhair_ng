@@ -1,0 +1,14 @@
+<form name="todoForm" ng-submit="todoCtrl.addTodoToAll(peopleCtrl)">
+  <fieldset class="form-group">
+    <textarea ng-model="todoCtrl.todo.subject" class="form-control" placeholder="Todo Text" autofocus required rows=10>
+    </textarea>
+  </fieldset>
+  <fieldset class="form-group">
+    <input type="date" id="dateInput" name="input" ng-model="todoCtrl.todo.date"/>
+  </fieldset>
+  <fieldset class="form-group">
+    <input type="submit" class="btn btn-primary pull-right" value="Submit Review" />
+  </fieldset>
+  <div ng-show="todoCtrl.submiterror" class="bs-callout bs-callout-danger">{{todoCtrl.submiterror}}</div>
+</form>
+

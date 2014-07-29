@@ -4,6 +4,9 @@ blockquote {
   font-size: 12px;
 }
 
+.editable-textarea {
+    width: 100%;
+}
 .bs-callout {
   padding: 20px;
   margin: 20px 0;

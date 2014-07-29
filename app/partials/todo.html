@@ -1,34 +1,35 @@
 <div ng-controller="TodoController as todoCtrl">
-<h3>Todos:</h3>
-<button ng-click="todoCtrl.flipShowForm()">Add todo</button>
+  <h3>Todos:</h3>
+  <button ng-click="todoCtrl.flipShowForm()">Add todo</button>
 
-<form name="todoForm" ng-submit="todoCtrl.addTodo(personCtrl.person)"
-  ng-show="todoCtrl.showForm">
-  <!--  Live Preview -->
-  <blockquote>
-    {{todoCtrl.todo.subject}}
-    <cite class="clearfix">—{{todoCtrl.todo.date | date}}</cite>
-  </blockquote>
+  <form name="todoForm" ng-submit="todoCtrl.addTodo(personCtrl.person)" ng-show="todoCtrl.showForm">
+    <fieldset class="form-group">
+      <textarea ng-model="todoCtrl.todo.subject" class="form-control" title="Subject" name="todotext" required></textarea>
+    </fieldset>
+    <fieldset class="form-group">
+      <input type="date" id="dateInput" name="input" ng-model="todoCtrl.todo.date"/required>
+    </fieldset>
+    <fieldset class="form-group">
+      <button type="submit" class="btn btn-primary pull-right">Save</button>
+      <button type="button" ng-click="todoCtrl.cancelTodoForm()" class="btn pull-right">Cancel</button>
+    </fieldset>
+    <div ng-show="todoCtrl.submiterror" class="bs-callout bs-callout-danger">{{todoCtrl.submiterror}}</div>
+  </form>
 
-  <fieldset class="form-group">
-    <textarea ng-model="todoCtrl.todo.subject" class="form-control"
-      placeholder="Write a short review of the product..."
-      title="Subject" required>
-    </textarea>
-  </fieldset>
-  <fieldset class="form-group">
-    <input type="date" id="dateInput" name="input" ng-model="todoCtrl.todo.date"/>
-  </fieldset>
-  <fieldset class="form-group">
-    <input type="submit" class="btn btn-primary pull-right" value="Submit Review" />
-  </fieldset>
-  <div ng-show="todoCtrl.submiterror" class="bs-callout bs-callout-danger">{{todoCtrl.submiterror}}</div>
-</form>
-
-<div ng-repeat="t in personCtrl.person.todos | orderBy:'-date'">
-  <blockquote>
-    {{t.subject}}
-    <cite class="clearfix">—{{t.date | date}}</cite>
-    <span ng-click="todoCtrl.deleteTodo(personCtrl.person, t)" class="glyphicon glyphicon-remove"></span>
-  </blockquote>
+  <div ng-repeat="t in personCtrl.person.todos | orderBy:'-date'">
+    <blockquote>
+      <form editable-form name="editableForm" onbeforesave="todoCtrl.updateTodo(personCtrl.person.id, t.id, $data)">
+        <pre e-class="form-control" ng-click="editableForm.$show()" editable-textarea="t.subject" e-name="subject" e-required e-rows="10" >{{ t.subject }}</pre>
+        <cite class="clearfix">—<span editable-date="t.date" e-name="date" e-required>{{t.date | date}}</span></cite>
+        <div class="buttons">
+          <!-- buttons to submit / cancel form -->
+          <span ng-show="editableForm.$visible">
+            <button type="submit" class="btn btn-primary" ng-disabled="editableForm.$waiting">Save</button>
+            <button type="button" class="btn btn-default" ng-disabled="editableForm.$waiting" ng-click="editableForm.$cancel()">Cancel</button>
+          </span>
+        </div>
+      </form>
+      <span ng-click="todoCtrl.deleteTodo(personCtrl.person, t)" class="glyphicon glyphicon-remove"></span>
+    </blockquote>
+  </div>
 </div>
